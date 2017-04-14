@@ -46,9 +46,7 @@ Concurrency:  Java provides built-in support for multithreaded programming. A m
 
 Life Cycle of a Thread:
 A thread goes through various stages in its life cycle. For example, a thread is born, started, runs, and then dies. Following diagram shows complete life cycle of a thread.
-![alt tag](https://cloud.githubusercontent.com/assets/22326212/25046329/daf9802a-20fe-11e7-87dd-a80a38cc5dd4.jpg)
-
-![An image](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png) <-- .element height="50%" width="50%" --> 
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25046386/31b6f334-20ff-11e7-8877-d6ef4a73583f.png)
 
 Fig 1. Various stages of Life Cycle of a Thread
 
@@ -62,7 +60,7 @@ This connectionless UDP protocol is used by the Front End, the Replica Manager a
 2.2	Use case Model
 
 The system for playerClient has four operations: creating account, signing in or out, and transferring account. For adminClient, there are two operations: getPlayerStatus and suspendAccount. These operations are shown below in the following high-level use case model. 
-![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045264/5f047308-20f9-11e7-8ea5-3e51d16316fa.png)
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25046415/518aaff2-20ff-11e7-8465-6bc38406115f.png)
 
 Fig 2. Use-case model
 
