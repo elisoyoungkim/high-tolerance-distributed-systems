@@ -50,7 +50,7 @@ A thread goes through various stages in its life cycle. For example, a thread is
 <img src="https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png" alt="alt text" width="10" height="10">
 
 
-![An image](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png) <!-- .element height="50%" width="50%" --> 
+![An image](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png) <-- .element height="50%" width="50%" --> 
 
 Fig 1. Various stages of Life Cycle of a Thread
 
