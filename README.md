@@ -1,6 +1,6 @@
 ## Software Failure Tolerant CORBA Distributed Player Status System ##
 
-TABLE OF CONTENTS
+**TABLE OF CONTENTS**
 
 * INTRODUCTION	
 * HIGH LEVEL SYSTEM DESIGN
@@ -11,6 +11,8 @@ TABLE OF CONTENTS
 * TEST CASES SCENRIOS	
 
 
+
+
 ### INTRODUCTION ### 
 
 The Distributed Player Status System (DPSS) is a simple system that is used by two clients that are player client and an administrator client. The application consists of three server programs corresponding to North-America (NA), Europe (EU) and Asia (AS) server. The system for player client has four operations used by the users to create account, sign in, signs out, and transfer account provided by game server. For admin client, there are two operations under the valid credentials. One is getPlayerStatus that the server associated with this administrator determined by the IP Address attempts to concurrently count the number of online players and offline players in the other geo-locations using UDP/IP sockets and returns the result to the administrator. The other is suspendAccount, which deletes the account of the username specified by the administrator. 
@@ -18,17 +20,16 @@ For this project, the CORBA implementation of the DPSS is enhanced to tolerate a
 The actively Replicated DPSS server system should have at least three Replicas each running a different implementation in different hosts on the network. Three significant subsystems should be added to the system: The Front End, the Replica Manager and the Request Handler (FIFO) which is implemented in the Leader Replica. The entire system is deployed and run over a Local Area Network (LAN) where the server Replicas, the Front End, the Request Handler, and the Replica Manager communicate among them using User Datagram Protocol.
 In the following section, the high level system design will be discussed where it explains the system functionality, architecture and expected behaviour of each component. In section 2 and 3, the design of the system specifications is covered. Also, in section 4, test cases scenarios are shown, which are the success and failure results from each 6 operations, concurrency, and the failure detection case. In the last section, the individual task of all of the members is mentioned.
 
-
 ### HIGL LEVEL SYSTEM DESIGN ### 
 #### Theories Description
-Theories for protocols and algorithms used in our DPSS system as below: 
+	Theories for protocols and algorithms used in our DPSS system as below: 
 
 CORBA: The Common Object Request Broker Architecture (CORBA) is a standard framework allowing software objects to communicate with one another, no matter where they are located or who has designed them. Two major components of CORBA are Object Request Broker (ORB) and Interface Definition Language (IDL). The CORBA ORB essentially enables communication between clients and remote server objects. The IDL is a declarative language that describes the interfaces to server objects. CORBA objects can be written in any standard programming language and exist on any computing platform supported by a CORBA vendor. 
 The interface definition specifies which member functions are available to a client without making any assumptions about the implementation of the object. To invoke member functions on a CORBA object, a client needs only the object’s IDL definition. The client does not need to know the language used to implement the object, the location of the object, or the operating system on which the object resides. CORBA objects use the ORB as an intermediary to facilitate network communication. A CORBA ORB delivers requests to objects and returns any response to clients making the requests. The key feature of ORB is the transparency of its facilitation of client/server communication. When a client invokes a member’s function on a CORBA object via the IDL interface, the ORB intercepts the function call and redirects the function call across the network to the target object. The ORB then collects the results and returns them to the client. 
 In this project, the CORBA architecture is used between the Client and the Front End. The client invoke mainly 6 remote methods (createPlayerAccount, SignInPlayer, SignOutPlayer, getPlayerStatus, transferAccount, suspendAccount) that reside on the FE, however the functionality of these methods would be defined on the replica servers. The purpose of the CORBA methods in the implementation class on the Frond End is to gather the details of the Player/Administrator, perform marshaling in order to convert these details into external data representation and send a UDP request message to the Leading server. All these methods on FE would be declared in an interface which in turn is defined in the IDL. 
 Concurrency:  Java provides built-in support for multithreaded programming. A multithreaded program contains two or more parts that can run concurrently. Each part of such a program is called a thread, and each thread defines a separate path of execution. A multithreading is a specialized form of multitasking. Multithreading requires less overhead than multitasking processing. Multithreading enables you to write very efficient programs that make maximum use of the CPU, because idle time can be kept to a minimum.
 
-Life Cycle of a Thread:
+	Life Cycle of a Thread:
 A thread goes through various stages in its life cycle. For example, a thread is born, started, runs, and then dies. Following diagram shows complete life cycle of a thread.
 ![alt tag](https://cloud.githubusercontent.com/assets/22326212/25046386/31b6f334-20ff-11e7-8877-d6ef4a73583f.png)
 
@@ -36,19 +37,23 @@ Fig 1. Various stages of Life Cycle of a Thread
 
 In this project, it is being used to test how the Frond End would handle multiple client requests simultaneously. Multiple clients can login from Client program and they should be able to interact with the Server replicas without any sort of internal interference. In order to maximize concurrency, SYNCHRNOIZED block is being used on the server side. Also, on each server replica, 3 UDP servers, one for every geo-location, are listening on 3 different ports in separate threads.
 
-UDP:  UDP (User Datagram Protocol) is a communications protocol that offers a limited amount of service when messages are exchanged between computers in a network that uses the Internet Protocol (IP). UDP is an alternative to the Transmission Control Protocol (TCP) and, together with IP, is sometimes referred to as UDP/IP. Like the Transmission Control Protocol, UDP uses the Internet Protocol to actually get a data unit (called a datagram) from one computer to another. Unlike TCP, however, UDP does not provide the service of dividing a message into packets (datagrams) and reassembling it at the other end. Specifically, UDP doesn't provide sequencing of the packets that the data arrives in. This means that the application program that uses UDP must be able to make sure that the entire message has arrived and is in the right order. Network applications that want to save processing time because they have very small data units to exchange (and therefore very little message reassembling to do) may prefer UDP to TCP. The Trivial File Transfer Protocol (TFTP) uses UDP instead of TCP.
+**UDP**:  UDP (User Datagram Protocol) is a communications protocol that offers a limited amount of service when messages are exchanged between computers in a network that uses the Internet Protocol (IP). UDP is an alternative to the Transmission Control Protocol (TCP) and, together with IP, is sometimes referred to as UDP/IP. Like the Transmission Control Protocol, UDP uses the Internet Protocol to actually get a data unit (called a datagram) from one computer to another. Unlike TCP, however, UDP does not provide the service of dividing a message into packets (datagrams) and reassembling it at the other end. Specifically, UDP doesn't provide sequencing of the packets that the data arrives in. This means that the application program that uses UDP must be able to make sure that the entire message has arrived and is in the right order. Network applications that want to save processing time because they have very small data units to exchange (and therefore very little message reassembling to do) may prefer UDP to TCP. The Trivial File Transfer Protocol (TFTP) uses UDP instead of TCP.
 UDP provides two services not provided by the IP layer. It provides port numbers to help distinguish different user requests and, optionally, a checksum capability to verify that the data arrived intact.
  
 This connectionless UDP protocol is used by the Front End, the Replica Manager and the Replica servers. Every message exchanged between the Front End and the Leading server would be UDP messages. The inter-communication between all 3 replicas would also be using UDP protocol. As a single replica server would be running 3 different instances of North America, European and Asia server, their interaction would also take place with UDP messages. Replica Manager would also use UDP for its interaction with the Leading server.
 
 #### Use case Model
 
-The system for playerClient has four operations: creating account, signing in or out, and transferring account. For adminClient, there are two operations: getPlayerStatus and suspendAccount. These operations are shown below in the following high-level use case model. 
+The system for playerClient has four operations
+
+
+
+creating account, signing in or out, and transferring account. For adminClient, there are two operations: getPlayerStatus and suspendAccount. These operations are shown below in the following high-level use case model. 
 ![alt tag](https://cloud.githubusercontent.com/assets/22326212/25046415/518aaff2-20ff-11e7-8465-6bc38406115f.png)
 
 Fig 2. Use-case model
 
-	System Architecture
+#### System Architecture
 In order to design the Failure Tolerant Distributed Player Status System (FT-DPSS), the previous assignment, the CORBA IDL is utilized by modifying the original work keeping the design flexible, simple, and comprehensible. To access for each DPSS of all group members same services, all three DPSS should have the same interface. The three systems are ready to publish these services using the CORBA architecture. This functionality is also already tested as part of previous delivered works. These three systems are converted to the three Replicas of the DPSS required to build up the FT-DPSS. Their services would still be accessed using the CORBA architecture. Compared to the direct access between the system clients and the DPSS Replicas, in this FT-DPSS system, the client request would be managed by a set of components playing between the clients and the Replicas. These components coordinate the Replicas work in order to support fault tolerance.
 	The system clients communicate with the system Front End (FE) by using the CORBA architecture. The FE is responsible for broadcasting the request with using the User Datagram Protocol, and that request is broadcasted from the FE to the Leader. The Leader processes these requests iteratively by using FIFO mechanism.  In order to process each request, the Leader multicasts each request to the other two Replicas which process in their local servers and send the reply back to the Leader. After then, the Leader compares the results from all the Replicas and sends the correct result to the FE. During this process, the Leader also handles with the RM when any of the other two Replicas gives faulty results. When the number of the faulty results exceeds the maximum limit, the RM has to reinitialize the specific Replica.
 	 The communication between the different modules such as the Replicas, the FE, and the RM is implemented over the UDP/IP protocol so as to optimize the process. At a same time, a low-level protocol is also possible since the developers know the communication protocol and data representation strategy about all the details concerning the module implementation. Using a low-level protocol allows alienating from the overhead linked to the generalizations required for the higher-level protocols and to design an ad-hoc communication.
@@ -78,7 +83,6 @@ b.	Typical Failure scenario
 
 
 ### ASSUMPTIONS ###
-
 a. The Replicas in this server subsystem are free from crash failure (software bug excluded).
 b. Only one of 3 Replicas (except Leader) can produce an incorrect result. (The number of Replica is 3=2N+1; N is the number of failure)
 c. No failures could occur during the recovery of a faulty Replica.
