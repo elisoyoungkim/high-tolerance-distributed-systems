@@ -46,9 +46,7 @@ Concurrency:  Java provides built-in support for multithreaded programming. A m
 
 Life Cycle of a Thread:
 A thread goes through various stages in its life cycle. For example, a thread is born, started, runs, and then dies. Following diagram shows complete life cycle of a thread.
-![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png| width=100)
-<img src="https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png" alt="alt text" width="10" height="10">
-
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25046329/daf9802a-20fe-11e7-87dd-a80a38cc5dd4.jpg)
 
 ![An image](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png) <-- .element height="50%" width="50%" --> 
 
