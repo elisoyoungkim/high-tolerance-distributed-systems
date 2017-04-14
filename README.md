@@ -26,12 +26,15 @@ TABLE OF CONTENTS
 
 4	TEST CASES SCENRIOS	
 
+
 1.	INTRODUCTION
 
 The Distributed Player Status System (DPSS) is a simple system that is used by two clients that are player client and an administrator client. The application consists of three server programs corresponding to North-America (NA), Europe (EU) and Asia (AS) server. The system for player client has four operations used by the users to create account, sign in, signs out, and transfer account provided by game server. For admin client, there are two operations under the valid credentials. One is getPlayerStatus that the server associated with this administrator determined by the IP Address attempts to concurrently count the number of online players and offline players in the other geo-locations using UDP/IP sockets and returns the result to the administrator. The other is suspendAccount, which deletes the account of the username specified by the administrator. 
 For this project, the CORBA implementation of the DPSS is enhanced to tolerate a single software failure by applying the active Replication model. The active model of Replication consists of number of Replicas that act as state machines. In this model, the same request of client is processed at every Replica and all of them should be in the same state with similar consistent data after each operation. In order to make all the Replicas to receive the same sequence of operations, an atomic multicast protocol is used.
 The actively Replicated DPSS server system should have at least three Replicas each running a different implementation in different hosts on the network. Three significant subsystems should be added to the system: The Front End, the Replica Manager and the Request Handler (FIFO) which is implemented in the Leader Replica. The entire system is deployed and run over a Local Area Network (LAN) where the server Replicas, the Front End, the Request Handler, and the Replica Manager communicate among them using User Datagram Protocol.
 In the following section, the high level system design will be discussed where it explains the system functionality, architecture and expected behaviour of each component. In section 2 and 3, the design of the system specifications is covered. Also, in section 4, test cases scenarios are shown, which are the success and failure results from each 6 operations, concurrency, and the failure detection case. In the last section, the individual task of all of the members is mentioned.
+
+
 2.	HIGL LEVEL SYSTEM DESIGN
 2.1	Theories Description 
 Theories for protocols and algorithms used in our DPSS system as below: 
@@ -40,6 +43,7 @@ CORBA: The Common Object Request Broker Architecture (CORBA) is a standard frame
 The interface definition specifies which member functions are available to a client without making any assumptions about the implementation of the object. To invoke member functions on a CORBA object, a client needs only the object’s IDL definition. The client does not need to know the language used to implement the object, the location of the object, or the operating system on which the object resides. CORBA objects use the ORB as an intermediary to facilitate network communication. A CORBA ORB delivers requests to objects and returns any response to clients making the requests. The key feature of ORB is the transparency of its facilitation of client/server communication. When a client invokes a member’s function on a CORBA object via the IDL interface, the ORB intercepts the function call and redirects the function call across the network to the target object. The ORB then collects the results and returns them to the client. 
 In this project, the CORBA architecture is used between the Client and the Front End. The client invoke mainly 6 remote methods (createPlayerAccount, SignInPlayer, SignOutPlayer, getPlayerStatus, transferAccount, suspendAccount) that reside on the FE, however the functionality of these methods would be defined on the replica servers. The purpose of the CORBA methods in the implementation class on the Frond End is to gather the details of the Player/Administrator, perform marshaling in order to convert these details into external data representation and send a UDP request message to the Leading server. All these methods on FE would be declared in an interface which in turn is defined in the IDL. 
 Concurrency:  Java provides built-in support for multithreaded programming. A multithreaded program contains two or more parts that can run concurrently. Each part of such a program is called a thread, and each thread defines a separate path of execution. A multithreading is a specialized form of multitasking. Multithreading requires less overhead than multitasking processing. Multithreading enables you to write very efficient programs that make maximum use of the CPU, because idle time can be kept to a minimum.
+
 Life Cycle of a Thread:
 A thread goes through various stages in its life cycle. For example, a thread is born, started, runs, and then dies. Following diagram shows complete life cycle of a thread.
 ![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png)
@@ -56,7 +60,7 @@ This connectionless UDP protocol is used by the Front End, the Replica Manager a
 2.2	Use case Model
 
 The system for playerClient has four operations: creating account, signing in or out, and transferring account. For adminClient, there are two operations: getPlayerStatus and suspendAccount. These operations are shown below in the following high-level use case model. 
-![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045465/84385530-20fa-11e7-8684-642ce164f98f.png)
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045264/5f047308-20f9-11e7-8ea5-3e51d16316fa.png)
 
 Fig 2. Use-case model
 
@@ -64,6 +68,7 @@ Fig 2. Use-case model
 In order to design the Failure Tolerant Distributed Player Status System (FT-DPSS), the previous assignment, the CORBA IDL is utilized by modifying the original work keeping the design flexible, simple, and comprehensible. To access for each DPSS of all group members same services, all three DPSS should have the same interface. The three systems are ready to publish these services using the CORBA architecture. This functionality is also already tested as part of previous delivered works. These three systems are converted to the three Replicas of the DPSS required to build up the FT-DPSS. Their services would still be accessed using the CORBA architecture. Compared to the direct access between the system clients and the DPSS Replicas, in this FT-DPSS system, the client request would be managed by a set of components playing between the clients and the Replicas. These components coordinate the Replicas work in order to support fault tolerance.
 	The system clients communicate with the system Front End (FE) by using the CORBA architecture. The FE is responsible for broadcasting the request with using the User Datagram Protocol, and that request is broadcasted from the FE to the Leader. The Leader processes these requests iteratively by using FIFO mechanism.  In order to process each request, the Leader multicasts each request to the other two Replicas which process in their local servers and send the reply back to the Leader. After then, the Leader compares the results from all the Replicas and sends the correct result to the FE. During this process, the Leader also handles with the RM when any of the other two Replicas gives faulty results. When the number of the faulty results exceeds the maximum limit, the RM has to reinitialize the specific Replica.
 	 The communication between the different modules such as the Replicas, the FE, and the RM is implemented over the UDP/IP protocol so as to optimize the process. At a same time, a low-level protocol is also possible since the developers know the communication protocol and data representation strategy about all the details concerning the module implementation. Using a low-level protocol allows alienating from the overhead linked to the generalizations required for the higher-level protocols and to design an ad-hoc communication.
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045917/9105924e-20fc-11e7-8215-034f3fec2463.png)
 
 Fig 3. DPSS system architecture
 
@@ -82,14 +87,10 @@ The Request Handler is the component that translates and manages the request bro
 
 2.3.5	Sequence Diagrams
 a.	Typical success scenario
-
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045896/780b7182-20fc-11e7-99d1-74c40c5accf2.png)
 
 b.	Typical Failure scenario
-
-
-
-
-
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045906/884adde4-20fc-11e7-85eb-b20aacb9a783.png)
 
 
 3.	ASSUMPTIONS
@@ -100,5 +101,6 @@ c.	No failures could occur during the recovery of a faulty Replica.
 d.	The Front End, the Leader and the Replica Manager are all free from any failure.
 
 4.	TEST CASE SCENARIOS
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045568/f099376c-20fa-11e7-9f37-528d61c3fa40.png)
 
 
