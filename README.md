@@ -1,14 +1,11 @@
-## Software Failure Tolerant CORBA Distributed Player Status System
+## Software Failure Tolerant CORBA Distributed Player Status System ##
 
 TABLE OF CONTENTS
 
-1	INTRODUCTION	
-
-2	HIGH LEVEL SYSTEM DESIGN
-
-2.1	Theories description	
-
-2.2	DPSS Use Case Model	
+1. INTRODUCTION	
+2. HIGH LEVEL SYSTEM DESIGN
+2.1. Theories description	
+2.2. DPSS Use Case Model	
 
 2.3	System Architecture	
 
