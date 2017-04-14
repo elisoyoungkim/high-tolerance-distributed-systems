@@ -4,10 +4,9 @@ TABLE OF CONTENTS
 
 1. INTRODUCTION	
 2. HIGH LEVEL SYSTEM DESIGN
-2.1. Theories description	
-2.2. DPSS Use Case Model	
-
-2.3	System Architecture	
+	1. Theories description
+	2. DPSS Use Case Model
+	3. System Architecture	
 
 2.3.1	Clients	
 
