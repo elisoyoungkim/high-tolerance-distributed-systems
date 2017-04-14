@@ -3,6 +3,7 @@
 TABLE OF CONTENTS
 
 1	INTRODUCTION	
+
 2	HIGH LEVEL SYSTEM DESIGN	
 2.1	Theories description	
 2.2	DPSS Use Case Model	
@@ -49,7 +50,7 @@ This connectionless UDP protocol is used by the Front End, the Replica Manager a
 2.2	Use case Model
 The system for playerClient has four operations: creating account, signing in or out, and transferring account. For adminClient, there are two operations: getPlayerStatus and suspendAccount. These operations are shown below in the following high-level use case model. 
 
-
+![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045264/5f047308-20f9-11e7-8ea5-3e51d16316fa.png)
 Fig 2. Use-case model
 
 2.3	System Architecture
