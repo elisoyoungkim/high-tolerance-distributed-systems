@@ -49,6 +49,9 @@ A thread goes through various stages in its life cycle. For example, a thread is
 ![alt tag](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png| width=100)
 <img src="https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png" alt="alt text" width="10" height="10">
 
+
+![An image](https://cloud.githubusercontent.com/assets/22326212/25045595/0c299bac-20fb-11e7-8e70-945bafc1d113.png) <!-- .element height="50%" width="50%" --> 
+
 Fig 1. Various stages of Life Cycle of a Thread
 
 In this project, it is being used to test how the Frond End would handle multiple client requests simultaneously. Multiple clients can login from Client program and they should be able to interact with the Server replicas without any sort of internal interference. In order to maximize concurrency, SYNCHRNOIZED block is being used on the server side. Also, on each server replica, 3 UDP servers, one for every geo-location, are listening on 3 different ports in separate threads.
